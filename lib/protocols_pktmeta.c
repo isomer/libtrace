@@ -173,14 +173,14 @@ DLLEXPORT void *trace_get_payload_from_meta(const void *meta,
 		libtrace_linktype_t *linktype,
 		uint32_t *remaining)
 {
-	void *nexthdr; 
+	void *nexthdr;
 	uint16_t arphrd;
 	uint16_t next;
-	
+
 	assert(meta != NULL);
 	assert(linktype != NULL);
 	assert(remaining != NULL);
-	
+
 	switch(*linktype) {
 		case TRACE_TYPE_LINUX_SLL:
 			nexthdr = trace_get_payload_from_linux_sll(meta,
@@ -188,9 +188,9 @@ DLLEXPORT void *trace_get_payload_from_meta(const void *meta,
 
 			/* Ethernet header is usually absent in SLL captures,
 			 * so we don't want to skip it just yet */
-			if (arphrd_type_to_libtrace(arphrd) == TRACE_TYPE_ETH && next != 0x0060) 
-				*linktype = TRACE_TYPE_NONE; 
-			else 
+			if (!nexthdr || (arphrd_type_to_libtrace(arphrd) == TRACE_TYPE_ETH && next != 0x0060))
+				*linktype = TRACE_TYPE_NONE;
+			else
 				*linktype = arphrd_type_to_libtrace(arphrd);
 			return nexthdr;
 		case TRACE_TYPE_80211_RADIO:

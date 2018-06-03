@@ -7,7 +7,7 @@
 
 DLLEXPORT void decode(int link_type UNUSED,const char *packet,unsigned len) {
 	unsigned char *link_ptr = NULL;
-        libtrace_ospf_link_v2_t *link;
+        libtrace_ospf_link_v2_t *link = NULL;
         uint32_t link_len;
         libtrace_ospf_router_lsa_v2_t *hdr;
 
