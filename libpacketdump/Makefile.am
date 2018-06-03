@@ -3,6 +3,12 @@ include_HEADERS = libpacketdump.h
 
 plugindir = $(libdir)/libpacketdump
 
+AUTOMAKE_OPTIONS=subdir-objects
+AM_CFLAGS=@ADD_INCLS@ -I../lib -I../libwandio
+AM_CXXFLAGS=-g -Wall -DDIRNAME=\"$(plugindir)\" \
+	    @ADD_INCLS@ -I../lib -I../libwandio
+
+
 BIN_PROTOCOLS=
 TXT_PROTOCOLS=
 
@@ -171,8 +177,6 @@ libpacketdump_la_SOURCES = libpacketdump.cc ../lib/byteswap.c \
 plugin_LTLIBRARIES = $(BIN_PROTOCOLS)
 dist_plugin_DATA = $(TXT_PROTOCOLS)
 
-INCLUDES= @ADD_INCLS@ -I../lib -I../libwandio 
-
 # NOTE: You CANNOT add @LEXLIBS@ here, as they are statically compiled
 # which on non x86_32 platforms means that they cannot be linked into
 # a shared library.
@@ -181,7 +185,6 @@ libpacketdump_la_LDFLAGS=\
         -version-info @LIBTRACE_MAJOR@:@LIBTRACE_MINOR@:@LIBTRACE_MID@ \
         @ADD_LDFLAGS@
 
-AM_CXXFLAGS=-g -Wall -DDIRNAME=\"$(plugindir)\" $(INCLUDES)
 BUILT_SOURCES=parser.h
 AM_YFLAGS=-d
 EXTRA_DIST=lexer.l parser.y

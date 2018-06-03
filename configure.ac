@@ -10,7 +10,7 @@ LIBTRACE_MID=0
 LIBTRACE_MINOR=19
 
 # OpenSolaris hides libraries like libncurses in /usr/gnu/lib, which is not
-# searched by default - add it to LDFLAGS so we at least have a chance of 
+# searched by default - add it to LDFLAGS so we at least have a chance of
 # finding it
 if test -d "/usr/gnu/lib"; then
 	LDFLAGS+=" -L/usr/gnu/lib"
@@ -31,7 +31,7 @@ AC_DEFINE([LIBTRACE_MINOR],${LIBTRACE_MINOR},[libtrace minor version])
 
 # These are all the files we want to be built for us by configure
 AC_CONFIG_FILES([Makefile lib/Makefile docs/Makefile libpacketdump/Makefile
-	tools/Makefile tools/traceanon/Makefile tools/tracepktdump/Makefile 
+	tools/Makefile tools/traceanon/Makefile tools/tracepktdump/Makefile
 	tools/tracemerge/Makefile tools/tracereport/Makefile
 	tools/tracertstats/Makefile tools/tracesplit/Makefile
 	tools/tracestats/Makefile tools/tracetop/Makefile
@@ -39,7 +39,7 @@ AC_CONFIG_FILES([Makefile lib/Makefile docs/Makefile libpacketdump/Makefile
 	tools/traceends/Makefile
 	examples/Makefile examples/skeleton/Makefile examples/rate/Makefile
 	examples/stats/Makefile examples/tutorial/Makefile
-	docs/libtrace.doxygen 
+	docs/libtrace.doxygen
 	lib/libtrace.h libwandio/Makefile
 	])
 
@@ -76,7 +76,7 @@ fi
 AC_PROG_INSTALL
 
 # Checking for bison and flex
-AC_CHECK_PROGS(YACC, 'bison -y' byacc yacc) 
+AC_CHECK_PROGS(YACC, 'bison -y' byacc yacc)
 AM_PROG_LEX
 
 # All our source files for function replacements are in lib/
@@ -99,20 +99,20 @@ AC_HEADER_TIME
 AC_SYS_LARGEFILE
 
 LIBPKTDUMP_LIBS="-ltrace "
-ADD_LDFLAGS="$ADD_LDFLAGS -L\$(abs_top_srcdir)/libwandio -L\$(abs_top_srcdir)/lib" 
+ADD_LDFLAGS="$ADD_LDFLAGS -L\$(abs_top_srcdir)/libwandio -L\$(abs_top_srcdir)/lib"
 LIBTRACE_LIBS="-lwandio"
 TOOLS_LIBS=""
 LIBWANDIO_LIBS=""
 
 # Set our C compiler flags based on the gcc version
 if test "$GCC" = "yes"; then
-	
+
 	gcc_version=`gcc -dumpversion`
 
 	# This is probably not the most reliable way to test whether our
 	# compiler supports visibility, but it's better than nothing
 	#
-	# According to the gcc wiki - http://gcc.gnu.org/wiki/Visibility - 
+	# According to the gcc wiki - http://gcc.gnu.org/wiki/Visibility -
 	# visibility is supported in gcc 4.0 or later, so we just need to
 	# check the major version number
 
@@ -125,14 +125,14 @@ if test "$GCC" = "yes"; then
 	else
 		vis=yes
 	fi
-	
+
 	CFLAGS="$CFLAGS -Wall -Wmissing-prototypes"
 	CXXFLAGS="$CXXFLAGS -Wall"
 	LIBCFLAGS="$CFLAGS"
 	LIBCFLAGS="$LIBCFLAGS -DLT_BUILDING_DLL=1"
 	LIBCXXFLAGS="$CXXFLAGS"
 	LIBCXXFLAGS="$CXXFLAGS -DLT_BUILDING_DLL=1"
-	
+
 	if test "$vis" = "yes"; then
 		LIBCFLAGS="$LIBCFLAGS -Wextra -fvisibility=hidden"
 		LIBCXXFLAGS="$CXXFLAGS -Wextra -fvisibility=hidden"
@@ -206,7 +206,7 @@ AC_CHECK_HEADER(net/if_arp.h,
 
 # Check for sdl_len in sockaddr_dl - sockaddr_dl is used on BSD systems
 if test "$libtrace_netpacket_packet_h" != "true"; then
-	AC_CHECK_MEMBER([struct sockaddr_dl.sdl_len], 
+	AC_CHECK_MEMBER([struct sockaddr_dl.sdl_len],
 		AC_DEFINE(HAVE_SDL_LEN,1,[Has sdl_len in sockaddr_dl]),,[
  #include <sys/types.h>
  #include <sys/socket.h>
@@ -263,10 +263,10 @@ fi
 
 # Configure options for use of DAG cards
 # Originally borrowed from libpcap, but extended quite a bit :)
-# More details on how this check works: 
+# More details on how this check works:
 #	http://wand.net.nz/trac/libtrace/wiki/DAGNotes
 
-AC_ARG_WITH(dag, 
+AC_ARG_WITH(dag,
 	    AS_HELP_STRING(--with-dag[=DIR],include DAG live capture support (located in directory DIR, if supplied)),
 [
         if test "$withval" = no
@@ -306,13 +306,13 @@ if test "$with_dag" != no; then
 		AC_DEFINE(HAVE_DAG_API, 1, [define if you have the DAG API])
 		AC_DEFINE(HAVE_DAG,1,[conditional for building with DAG live capture support])
 		libtrace_dag=true
-		
+
 		AC_DEFINE(DAG_VERSION,25,[defines the DAG driver version])
 		libtrace_dag_version=25
 	fi
 fi
 
-# TODO: turn the test part of the next block into a function, so it can be 
+# TODO: turn the test part of the next block into a function, so it can be
 # called multiple times for $dag_root, /root/dag, /usr/local/lib
 dag_drv_v="DAG not present"
 
@@ -325,7 +325,7 @@ if test "$with_dag" != no -a "$libtrace_dag" = false; then
 	else
 		dag_lib_dir="$dag_root"
 	fi
-	
+
 	if test -r "$dag_root/include"; then
 		dag_tools_dir="$dag_root/tools"
                 dag_include_dir="$dag_root/include"
@@ -334,7 +334,7 @@ if test "$with_dag" != no -a "$libtrace_dag" = false; then
                 dag_include_dir="$dag_root"
 	fi
 
-        if test -r "$dag_include_dir/dagapi.h" -a -r "$dag_lib_dir/libdag.a"; 
+        if test -r "$dag_include_dir/dagapi.h" -a -r "$dag_lib_dir/libdag.a";
 	then
                 ADD_INCLS="$ADD_INCLS -I $dag_include_dir"
 		ADD_LIBS="$ADD_LIBS -ldag"
@@ -342,7 +342,7 @@ if test "$with_dag" != no -a "$libtrace_dag" = false; then
 		DAG_TOOLS_DIR=$dag_tools_dir
 		AC_SUBST([DAG_TOOLS_DIR])
                 libtrace_dag=true
-                
+
 		AC_DEFINE(HAVE_DAG_API, 1, [define if you have the DAG API])
 		AC_DEFINE(HAVE_DAG,1,[conditional for building with DAG live capture support])
 		AC_DEFINE(DAG_VERSION, 24, [defines the DAG driver version])
@@ -375,7 +375,7 @@ fi
 #fi
 #DAG_VERSION_NUM=$dag_drv_v
 
-# Check for DPDK 
+# Check for DPDK
 AC_ARG_WITH(dpdk,
 	    AS_HELP_STRING(--with-dpdk,include DPDK live capture support (Must set RTE_SDK/_TARGET environment variable)),
 [
@@ -438,7 +438,7 @@ if test "$dlfound" = 0; then
 	AC_MSG_ERROR("Unable to find dlopen. Please use LDFLAGS to specify the location of libdl and re-run configure")
 fi
 
-if test "$ac_cv_search_dlopen" != "none required"; then 
+if test "$ac_cv_search_dlopen" != "none required"; then
 	LIBPKTDUMP_LIBS="$LIBPKTDUMP_LIBS $ac_cv_search_dlopen"
 fi
 
@@ -459,7 +459,7 @@ if test "$have_socket" = 1; then
 	if test "$ac_cv_search_getservent" != "none required"; then
 		LIBTRACE_LIBS="$LIBTRACE_LIBS $ac_cv_search_getservent"
 		LIBPKTDUMP_LIBS="$LIBPKTDUMP_LIBS $ac_cv_search_getservent"
-	fi 
+	fi
 fi
 
 
@@ -496,7 +496,7 @@ if (test "$use_llvm" != "no"); then
 	AC_CHECK_HEADERS([boost/lexical_cast.hpp], boost="yes", boost="no")
 	AC_LANG_POP([C++])
 
-		
+
 	if test "$boost" = "no"; then
 		AC_MSG_NOTICE([Unabled to find boost libraries.  JIT support disabled.])
 		JIT=no
@@ -530,13 +530,13 @@ AS_IF([test "x$have_ncurses" = "xyes"], [
 	AC_DEFINE(HAVE_NCURSES, 1, "Compiled with ncurses support")
 	with_ncurses=yes],
 
-	
+
 	[AS_IF([test "x$with_ncurses" = "xyes"],
 		[AC_MSG_ERROR([ncurses requested but not found])])
 	AC_DEFINE(HAVE_NCURSES, 0, "Compiled with ncurses support")
 	with_ncurses=no]
 )
-			
+
 AC_ARG_WITH([bzip2],
 	AC_HELP_STRING([--with-bzip2], [build with support for bzip2 compressed files]))
 
@@ -551,7 +551,7 @@ AS_IF([test "x$have_bzip" = "xyes"], [
 	fi
 	with_bzip2=yes
 	AC_DEFINE(HAVE_LIBBZ2, 1, "Compiled with bzip2 support")],
-	
+
 	[AS_IF([test "x$with_bzip2" = "xyes"],
 		[AC_MSG_ERROR([bzip2 requested but not found])])
 	AC_DEFINE(HAVE_LIBBZ2, 0, "Compiled with bzip2 support")
@@ -573,7 +573,7 @@ AS_IF([test "x$have_zlib" = "xyes"], [
 	AC_DEFINE(HAVE_LIBZ, 1, "Compiled with zlib support")
 	with_zlib=yes],
 
-	
+
 	[AS_IF([test "x$with_zlib" = "xyes"],
 		[AC_MSG_ERROR([zlib requested but not found])])
 	AC_DEFINE(HAVE_LIBZ, 0, "Compiled with zlib support")
@@ -595,13 +595,34 @@ AS_IF([test "x$have_lzo" = "xyes"], [
 	AC_DEFINE(HAVE_LIBLZO2, 1, "Compiled with lzo2 support")
 	with_lzo=yes],
 
-	
+
 	[AS_IF([test "x$with_lzo" = "xyes"],
 		[AC_MSG_ERROR([lzo requested but not found])])
 	AC_DEFINE(HAVE_LIBLZO2, 0, "Compiled with lzo2 support")
 	with_lzo=no]
 )
 
+AC_ARG_WITH([lzma],
+	AC_HELP_STRING([--with-lzma], [build with support for writing xz compressed files]))
+
+AS_IF([test "x$with_lzma" != "xno"],
+	[
+	AC_CHECK_LIB(lzma, lzma_easy_encoder, have_lzma=yes, have_lzma=no)
+	], [have_lzma=no])
+
+AS_IF([test "x$have_lzma" = "xyes"], [
+	if test "$ac_cv_lib_lzma_easy_encoder" != "none required"; then
+		LIBWANDIO_LIBS="$LIBWANDIO_LIBS -llzma"
+	fi
+	AC_DEFINE(HAVE_LIBLZMA, 1, "Compiled with lzma support")
+	with_lzma=yes],
+
+
+	[AS_IF([test "x$with_lma" = "xyes"],
+		[AC_MSG_ERROR([lzma requested but not found])])
+	AC_DEFINE(HAVE_LIBLZMA, 0, "Compiled with lzma support")
+	with_lzma=no]
+)
 
 # Define automake conditionals for use in our Makefile.am files
 AM_CONDITIONAL([HAVE_BPF_CAPTURE], [test "$ac_cv_have_decl_BIOCSETIF" = yes ])
@@ -616,6 +637,7 @@ AM_CONDITIONAL([HAVE_NCURSES], [test "x$with_ncurses" != "xno"])
 AM_CONDITIONAL([HAVE_BZLIB], [test "x$with_bzip2" != "xno"])
 AM_CONDITIONAL([HAVE_ZLIB], [test "x$with_zlib" != "xno"])
 AM_CONDITIONAL([HAVE_LZO], [ test "x$with_lzo" != "xno"])
+AM_CONDITIONAL([HAVE_LZMA], [ test "x$with_lzma" != "xno"])
 
 # Check for miscellaneous programs
 AC_CHECK_PROG([libtrace_doxygen], [doxygen], [true], [false])
@@ -652,7 +674,7 @@ AC_OUTPUT
 reportopt() {
 	if test x"$2" = xtrue -o x"$2" = xyes; then
 		AC_MSG_NOTICE([$1: Yes])
-	else 
+	else
 		AC_MSG_NOTICE([$1: No])
 	fi
 }
@@ -677,7 +699,7 @@ if test x"$libtrace_dag" = xtrue; then
 		AC_MSG_NOTICE([Compiled with DAG live capture support: 3.0])
 	else
 		AC_MSG_NOTICE([Compiled with DAG live capture support: 2.5])
-	fi	
+	fi
 else
 	AC_MSG_NOTICE([Compiled with DAG live capture support: No])
 fi
@@ -688,7 +710,7 @@ elif test x"$want_dpdk" != "xno"; then
 #   We don't officially support DPDK so only report failure if the user
 #   explicitly asked for DPDK. That way, we can hopefully keep it hidden
 #   from most users for now...
-	
+
     AC_MSG_NOTICE([Compiled with DPDK live capture support: No])
     AC_MSG_NOTICE([Note: Requires DPDK v1.5 or newer])
 fi
@@ -697,7 +719,7 @@ reportopt "Building man pages/documentation" $libtrace_doxygen
 reportopt "Building tracetop (requires libncurses)" $with_ncurses
 
 # Report any errors relating to missing bison, flex, etc.
-echo 
+echo
 ac_cv_errcount=0;
 if test -z "$YACC"; then
 	AC_MSG_WARN(bison or yacc not found. Please install bison before continuing)
